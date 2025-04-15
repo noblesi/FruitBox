@@ -1,0 +1,22 @@
+# Unity generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+MemoryCaptures/
+UserSettings/
+
+# VS/Jetbrains Rider files
+*.csproj
+*.sln
+*.user
+*.unityproj
+*.pidb
+*.suo
+*.booproj
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
