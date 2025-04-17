@@ -48,6 +48,28 @@ public class FruitManager : MonoBehaviour
         {
             isDragging = false;
             Debug.Log($"선택 완료! 총 {selectedFruits.Count}개 선택됨.");
+
+            if(selectedFruits.Count > 0)
+            {
+                int sum = 0;
+                foreach(var fruit in selectedFruits)
+                {
+                    sum += fruit.number;
+                }
+
+                if (sum == 10)
+                {
+                    Debug.Log("합이 10입니다! 과일 제거!");
+                    RemoveSelectedFruits();
+                }
+                else
+                {
+                    Debug.Log($"합이 {sum}입니다. 다시 시도하세요!");
+                    ClearAllSelections();
+                }
+            }
+
+            lineRenderer.positionCount = 0;
         }
 
         if (isDragging)
@@ -102,6 +124,15 @@ public class FruitManager : MonoBehaviour
         foreach(Fruit fruit in selectedFruits)
         {
             fruit.ResetSelection();
+        }
+        selectedFruits.Clear();
+    }
+
+    private void RemoveSelectedFruits()
+    {
+        foreach(Fruit fruit in selectedFruits)
+        {
+            Destroy(fruit.gameObject);
         }
         selectedFruits.Clear();
     }
