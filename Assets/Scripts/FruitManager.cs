@@ -13,6 +13,7 @@ public class FruitManager : MonoBehaviour
     public float spacing = 1.2f;
 
     private List<Fruit> selectedFruits = new List<Fruit>();
+    private List<Fruit> allFruits = new List<Fruit>();
     private bool isDragging = false;
 
     private void Start()
@@ -106,17 +107,51 @@ public class FruitManager : MonoBehaviour
                 Fruit fruit = fruitObj.GetComponent<Fruit>();
 
                 fruit.SetGridPosition(x, y);
-                int randomNumber = Random.Range(1, 10);
-                fruit.SetNumber(randomNumber);
+                fruit.SetNumber(Random.Range(1, 10));
+
+                allFruits.Add(fruit);
             }
         }
     }
 
     private bool IsAdjacent(Fruit a, Fruit b)
     {
-        int dx = Mathf.Abs(a.gridX - b.gridX);
-        int dy = Mathf.Abs(a.gridY - b.gridY);
-        return (dx == 1 && dy == 0) || (dx == 0 && dy == 1);
+        if(a.gridY == b.gridY)
+        {
+            int minX = Mathf.Min(a.gridX, b.gridX);
+            int maxX = Mathf.Max(a.gridX, b.gridX);
+
+            for(int x = minX + 1; x < maxX; x++)
+            {
+                if (FindFruitAt(x, a.gridY) != null) 
+                    return false;
+            }
+            return true;
+        }
+
+        if (a.gridX == b.gridX)
+        {
+            int minY = Mathf.Min(a.gridY, b.gridY);
+            int maxY = Mathf.Max(a.gridY, b.gridY);
+
+            for (int y = minY + 1; y < maxY; y++)
+            {
+                if (FindFruitAt(a.gridX, y) != null) 
+                    return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private Fruit FindFruitAt(int x, int y)
+    {
+        foreach(Fruit fruit in allFruits)
+        {
+            if(fruit != null && fruit.gridX == x && fruit.gridY == y) return fruit;
+        }
+        return null;
     }
 
     private void ClearAllSelections()
@@ -132,6 +167,7 @@ public class FruitManager : MonoBehaviour
     {
         foreach(Fruit fruit in selectedFruits)
         {
+            allFruits.Remove(fruit);
             Destroy(fruit.gameObject);
         }
         selectedFruits.Clear();
