@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using TMPro.EditorUtilities;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class FruitManager : MonoBehaviour
     public GameObject fruitPrefab;
     public Transform fruitParent;
     public LineRenderer lineRenderer;
+    public TextMeshProUGUI scoreText;
 
     public int rows = 5;
     public int cols = 5;
@@ -16,9 +18,13 @@ public class FruitManager : MonoBehaviour
     private List<Fruit> allFruits = new List<Fruit>();
     private bool isDragging = false;
 
+    private int score = 0;
+    
+
     private void Start()
     {
         GenerateFruits();
+        UpdateScoreUI();
         
         if(lineRenderer != null)
         {
@@ -172,6 +178,9 @@ public class FruitManager : MonoBehaviour
 
     private void RemoveSelectedFruits()
     {
+        score += 10;
+        UpdateScoreUI();
+
         foreach(Fruit fruit in selectedFruits)
         {
             if (fruit != null)
@@ -191,6 +200,14 @@ public class FruitManager : MonoBehaviour
         for(int i = 0; i < selectedFruits.Count; i++)
         {
             lineRenderer.SetPosition(i, selectedFruits[i].transform.position);
+        }
+    }
+
+    private void UpdateScoreUI()
+    {
+        if(scoreText != null)
+        {
+            scoreText.text = $"Score : {score}";
         }
     }
 }
