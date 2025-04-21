@@ -568,10 +568,10 @@ MonoBehaviour:
   fruitPrefab: {fileID: 3716954423937522427, guid: da0d9b634190d3d42b0cff34463d801e, type: 3}
   fruitParent: {fileID: 1896035505}
   lineRenderer: {fileID: 1626970953}
-  scoreText: {fileID: 0}
-  rows: 5
-  cols: 5
-  spacing: 1.2
+  scoreText: {fileID: 1665518781}
+  rows: 9
+  cols: 16
+  spacing: 0.9
 --- !u!1 &1626970952
 GameObject:
   m_ObjectHideFlags: 0

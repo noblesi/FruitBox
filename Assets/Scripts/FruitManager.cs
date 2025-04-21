@@ -10,9 +10,9 @@ public class FruitManager : MonoBehaviour
     public LineRenderer lineRenderer;
     public TextMeshProUGUI scoreText;
 
-    public int rows = 5;
-    public int cols = 5;
-    public float spacing = 1.2f;
+    [SerializeField] private int rows = 9;
+    [SerializeField] private int cols = 16;
+    [SerializeField] private float spacing = 0.9f;
 
     private List<Fruit> selectedFruits = new List<Fruit>();
     private List<Fruit> allFruits = new List<Fruit>();
@@ -178,7 +178,7 @@ public class FruitManager : MonoBehaviour
 
     private void RemoveSelectedFruits()
     {
-        score += 10;
+        score += selectedFruits.Count;
         UpdateScoreUI();
 
         foreach(Fruit fruit in selectedFruits)
