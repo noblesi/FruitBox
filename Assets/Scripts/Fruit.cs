@@ -15,12 +15,19 @@ public class Fruit : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if(numberText == null)
+        {
+            numberText = GetComponentInChildren<TextMeshProUGUI>();
+        }
     }
 
     public void SetNumber(int value)
     {
         number = value;
-        numberText.text = number.ToString();
+        if(numberText != null)
+        {
+            numberText.text = number.ToString();
+        }
     }
 
     public void SetGridPosition(int x, int y)
@@ -45,6 +52,6 @@ public class Fruit : MonoBehaviour
     {
         isSelected = false;
         spriteRenderer.color = Color.white;
-        transform.localPosition = Vector3.one;
+        transform.localScale = Vector3.one;
     }
 }

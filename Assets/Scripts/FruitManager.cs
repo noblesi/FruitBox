@@ -42,7 +42,8 @@ public class FruitManager : MonoBehaviour
         {
             isDragging = true;
             ClearAllSelections();
-            lineRenderer.positionCount = 0;
+            if(lineRenderer != null)
+                lineRenderer.positionCount = 0;
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -69,8 +70,8 @@ public class FruitManager : MonoBehaviour
                     ClearAllSelections();
                 }
             }
-
-            lineRenderer.positionCount = 0;
+            if(lineRenderer != null)
+                lineRenderer.positionCount = 0;
         }
 
         if (isDragging)
@@ -86,7 +87,8 @@ public class FruitManager : MonoBehaviour
                     {
                         fruit.ToggleSelection();
                         selectedFruits.Add(fruit);
-                        UpdateLineRenderer();
+                        if(isDragging)
+                            UpdateLineRenderer();
                     }
                 }
             }
@@ -116,40 +118,40 @@ public class FruitManager : MonoBehaviour
 
     private bool IsAdjacent(Fruit a, Fruit b)
     {
-        if(a.gridY == b.gridY)
+        int dx = a.gridX - b.gridX;
+        int dy = a.gridY - b.gridY;
+
+        if(dx == 0 ||dy == 0 || Mathf.Abs(dx) == Mathf.Abs(dy))
         {
-            int minX = Mathf.Min(a.gridX, b.gridX);
-            int maxX = Mathf.Max(a.gridX, b.gridX);
-
-            for(int x = minX + 1; x < maxX; x++)
-            {
-                if (FindFruitAt(x, a.gridY) != null) 
-                    return false;
-            }
-            return true;
+            return IsPathClear(a, b);
         }
-
-        if (a.gridX == b.gridX)
-        {
-            int minY = Mathf.Min(a.gridY, b.gridY);
-            int maxY = Mathf.Max(a.gridY, b.gridY);
-
-            for (int y = minY + 1; y < maxY; y++)
-            {
-                if (FindFruitAt(a.gridX, y) != null) 
-                    return false;
-            }
-            return true;
-        }
-
         return false;
+    }
+
+    private bool IsPathClear(Fruit a, Fruit b)
+    {
+        int dx = System.Math.Sign(b.gridX - a.gridX);
+        int dy = System.Math.Sign(b.gridY - a.gridY);
+
+        int x = a.gridX + dx;
+        int y = a.gridY + dy;
+
+        while(x != b.gridX || y != b.gridY)
+        {
+            if (FindFruitAt(x, y) != null) 
+                return false;
+            x += dx;
+            y += dy;
+        }
+        return true;
     }
 
     private Fruit FindFruitAt(int x, int y)
     {
         foreach(Fruit fruit in allFruits)
         {
-            if(fruit != null && fruit.gridX == x && fruit.gridY == y) return fruit;
+            if(fruit != null && fruit.gridX == x && fruit.gridY == y) 
+                return fruit;
         }
         return null;
     }
@@ -158,23 +160,33 @@ public class FruitManager : MonoBehaviour
     {
         foreach(Fruit fruit in selectedFruits)
         {
-            fruit.ResetSelection();
+            if(fruit != null)
+            {
+                fruit.ResetSelection();
+            }
         }
         selectedFruits.Clear();
+        if(lineRenderer != null)        
+            lineRenderer.positionCount = 0;
     }
 
     private void RemoveSelectedFruits()
     {
         foreach(Fruit fruit in selectedFruits)
         {
-            allFruits.Remove(fruit);
-            Destroy(fruit.gameObject);
+            if (fruit != null)
+            {
+                allFruits.Remove(fruit);
+                Destroy(fruit.gameObject);
+            }
         }
         selectedFruits.Clear();
     }
 
     private void UpdateLineRenderer()
     {
+        if (lineRenderer == null) return;
+
         lineRenderer.positionCount = selectedFruits.Count;
         for(int i = 0; i < selectedFruits.Count; i++)
         {
