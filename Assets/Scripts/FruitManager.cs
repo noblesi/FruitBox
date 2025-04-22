@@ -9,6 +9,7 @@ public class FruitManager : MonoBehaviour
     public Transform fruitParent;
     public LineRenderer lineRenderer;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI timeText;
 
     [SerializeField] private int rows = 9;
     [SerializeField] private int cols = 16;
@@ -19,12 +20,15 @@ public class FruitManager : MonoBehaviour
     private bool isDragging = false;
 
     private int score = 0;
-    
+
+    private float gameTime = 120f;
+    private bool isGameOver = false;
 
     private void Start()
     {
         GenerateFruits();
         UpdateScoreUI();
+        UpdateTimeUI();
         
         if(lineRenderer != null)
         {
@@ -39,7 +43,23 @@ public class FruitManager : MonoBehaviour
 
     private void Update()
     {
+        if (isGameOver) return;
+
         HandleDragSelection();
+
+        gameTime -= Time.deltaTime;
+        if(gameTime <= 0f)
+        {
+            gameTime = 0f;
+            GameOver();
+        }
+        UpdateTimeUI();
+    }
+
+    private void GameOver()
+    {
+        isGameOver = true;
+        Debug.Log("게임 종료! 최종 점수: " + score);
     }
 
     private void HandleDragSelection()
@@ -208,6 +228,14 @@ public class FruitManager : MonoBehaviour
         if(scoreText != null)
         {
             scoreText.text = $"Score : {score}";
+        }
+    }
+
+    private void UpdateTimeUI()
+    {
+        if(timeText != null)
+        {
+            timeText.text = $"Time : {Mathf.CeilToInt(gameTime)}s";
         }
     }
 }
