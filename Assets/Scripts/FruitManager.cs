@@ -10,6 +10,8 @@ public class FruitManager : MonoBehaviour
     public LineRenderer lineRenderer;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timeText;
+    public GameObject gameOverText;
+    public GameObject startPanel;
 
     [SerializeField] private int rows = 9;
     [SerializeField] private int cols = 16;
@@ -23,6 +25,8 @@ public class FruitManager : MonoBehaviour
 
     private float gameTime = 120f;
     private bool isGameOver = false;
+
+    private bool isGameStarted = false;
 
     private void Start()
     {
@@ -43,7 +47,7 @@ public class FruitManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameOver) return;
+        if (!isGameStarted || isGameOver) return;
 
         HandleDragSelection();
 
@@ -56,14 +60,27 @@ public class FruitManager : MonoBehaviour
         UpdateTimeUI();
     }
 
+    public void StartGame()
+    {
+        isGameStarted = true;
+        startPanel.SetActive(false);
+    }
+
     private void GameOver()
     {
         isGameOver = true;
         Debug.Log("게임 종료! 최종 점수: " + score);
+
+        if(gameOverText != null)
+        {
+            gameOverText.SetActive(true);
+        }
     }
 
     private void HandleDragSelection()
     {
+        if (!isGameStarted || isGameOver) return;
+
         if(Input.GetMouseButtonDown(0))
         {
             isDragging = true;
