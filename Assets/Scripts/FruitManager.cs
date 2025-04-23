@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FruitManager : MonoBehaviour
 {
@@ -10,8 +11,9 @@ public class FruitManager : MonoBehaviour
     public LineRenderer lineRenderer;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timeText;
-    public GameObject gameOverText;
     public GameObject startPanel;
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI finalScoreText;
 
     [SerializeField] private int rows = 9;
     [SerializeField] private int cols = 16;
@@ -33,6 +35,11 @@ public class FruitManager : MonoBehaviour
         GenerateFruits();
         UpdateScoreUI();
         UpdateTimeUI();
+
+        if(gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
         
         if(lineRenderer != null)
         {
@@ -66,14 +73,24 @@ public class FruitManager : MonoBehaviour
         startPanel.SetActive(false);
     }
 
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     private void GameOver()
     {
         isGameOver = true;
         Debug.Log("게임 종료! 최종 점수: " + score);
 
-        if(gameOverText != null)
+        if(gameOverPanel != null)
         {
-            gameOverText.SetActive(true);
+            gameOverPanel.SetActive(true);
+        }
+
+        if(finalScoreText != null)
+        {
+            finalScoreText.text = $"Score : {score}";
         }
     }
 
